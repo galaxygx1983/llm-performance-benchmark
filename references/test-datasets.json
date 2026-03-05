@@ -1,0 +1,252 @@
+{
+  "version": "1.0",
+  "description": "权威LLM性能测试数据集 - 包含多种基准测试场景",
+  "categories": {
+    "short_response": {
+      "description": "短文本响应测试 - 评估快速首响能力",
+      "prompts": [
+        {
+          "id": "short-1",
+          "name": "简单问答",
+          "prompt": "What is the capital of France?",
+          "maxTokens": 50,
+          "expectedTokens": 10
+        },
+        {
+          "id": "short-2",
+          "name": "定义解释",
+          "prompt": "Define machine learning in one sentence.",
+          "maxTokens": 50,
+          "expectedTokens": 15
+        },
+        {
+          "id": "short-3",
+          "name": "列表生成",
+          "prompt": "List three planets in the solar system.",
+          "maxTokens": 30,
+          "expectedTokens": 8
+        }
+      ]
+    },
+    "medium_response": {
+      "description": "中等长度响应测试 - 标准性能评估",
+      "prompts": [
+        {
+          "id": "medium-1",
+          "name": "概念解释",
+          "prompt": "Explain how distributed consensus works in distributed systems. Include at least two consensus algorithms.",
+          "maxTokens": 512,
+          "expectedTokens": 200
+        },
+        {
+          "id": "medium-2",
+          "name": "技术比较",
+          "prompt": "Compare REST API and GraphQL. Discuss their advantages and disadvantages.",
+          "maxTokens": 512,
+          "expectedTokens": 180
+        },
+        {
+          "id": "medium-3",
+          "name": "代码解释",
+          "prompt": "Explain what the following Python code does: def quicksort(arr): if len(arr) <= 1: return arr; pivot = arr[len(arr) // 2]; left = [x for x in arr if x < pivot]; middle = [x for x in arr if x == pivot]; right = [x for x in arr if x > pivot]; return quicksort(left) + middle + quicksort(right)",
+          "maxTokens": 512,
+          "expectedTokens": 150
+        },
+        {
+          "id": "medium-4",
+          "name": "数学推理",
+          "prompt": "If a train travels 120 km in 1.5 hours, and another train travels 180 km in 2 hours, which train is faster and by how much?",
+          "maxTokens": 256,
+          "expectedTokens": 80
+        }
+      ]
+    },
+    "long_response": {
+      "description": "长文本响应测试 - 评估长上下文处理能力",
+      "prompts": [
+        {
+          "id": "long-1",
+          "name": "详细教程",
+          "prompt": "Write a comprehensive guide on how to set up a Kubernetes cluster from scratch. Include steps for installation, configuration, and deployment of a sample application.",
+          "maxTokens": 1024,
+          "expectedTokens": 500
+        },
+        {
+          "id": "long-2",
+          "name": "技术报告",
+          "prompt": "Write a detailed analysis of the advantages and disadvantages of microservices architecture compared to monolithic architecture. Include real-world examples and best practices.",
+          "maxTokens": 1024,
+          "expectedTokens": 450
+        },
+        {
+          "id": "long-3",
+          "name": "代码审查",
+          "prompt": "Review the following code for security vulnerabilities and performance issues: A user authentication system that stores passwords in plain text, uses MD5 for session tokens, has no rate limiting, and allows SQL injection through user input.",
+          "maxTokens": 768,
+          "expectedTokens": 300
+        }
+      ]
+    },
+    "code_generation": {
+      "description": "代码生成测试 - 评估编程能力",
+      "prompts": [
+        {
+          "id": "code-1",
+          "name": "函数实现",
+          "prompt": "Write a Python function that finds the longest palindromic substring in a given string. Include proper error handling and docstrings.",
+          "maxTokens": 512,
+          "expectedTokens": 200
+        },
+        {
+          "id": "code-2",
+          "name": "API端点",
+          "prompt": "Write a REST API endpoint in Python using Flask that accepts a JSON payload with user information and stores it in a SQLite database. Include input validation.",
+          "maxTokens": 512,
+          "expectedTokens": 220
+        },
+        {
+          "id": "code-3",
+          "name": "数据结构",
+          "prompt": "Implement a LRU (Least Recently Used) cache in Python with O(1) time complexity for both get and put operations.",
+          "maxTokens": 512,
+          "expectedTokens": 180
+        },
+        {
+          "id": "code-4",
+          "name": "SQL查询",
+          "prompt": "Write a SQL query to find the top 5 customers by total order amount in the last month. Assume tables: orders(id, customer_id, amount, order_date), customers(id, name).",
+          "maxTokens": 256,
+          "expectedTokens": 80
+        }
+      ]
+    },
+    "reasoning": {
+      "description": "推理能力测试 - 评估逻辑和数学推理",
+      "prompts": [
+        {
+          "id": "reason-1",
+          "name": "逻辑推理",
+          "prompt": "All roses are flowers. Some flowers fade quickly. Therefore, can we conclude that some roses fade quickly? Explain your reasoning.",
+          "maxTokens": 256,
+          "expectedTokens": 100
+        },
+        {
+          "id": "reason-2",
+          "name": "数学证明",
+          "prompt": "Prove that the sum of two even numbers is always even. Show your reasoning step by step.",
+          "maxTokens": 256,
+          "expectedTokens": 80
+        },
+        {
+          "id": "reason-3",
+          "name": "数据分析",
+          "prompt": "Given a dataset with monthly sales: Jan: $10000, Feb: $12000, Mar: $15000, Apr: $14000, May: $16000. Calculate the moving average for a 3-month window and predict June's sales.",
+          "maxTokens": 256,
+          "expectedTokens": 120
+        }
+      ]
+    },
+    "multilingual": {
+      "description": "多语言测试 - 评估多语言处理能力",
+      "prompts": [
+        {
+          "id": "multi-1",
+          "name": "中文问答",
+          "prompt": "请简要介绍一下人工智能的发展历史。",
+          "maxTokens": 512,
+          "expectedTokens": 200
+        },
+        {
+          "id": "multi-2",
+          "name": "中文技术",
+          "prompt": "解释一下什么是RESTful API，并给出例子。",
+          "maxTokens": 512,
+          "expectedTokens": 180
+        },
+        {
+          "id": "multi-3",
+          "name": "翻译任务",
+          "prompt": "Translate the following to French: The quick brown fox jumps over the lazy dog.",
+          "maxTokens": 100,
+          "expectedTokens": 20
+        }
+      ]
+    },
+    "system_prompt": {
+      "description": "系统提示词测试 - 评估角色扮演和指令遵循",
+      "prompts": [
+        {
+          "id": "sys-1",
+          "name": "角色扮演",
+          "prompt": "You are a senior software architect with 20 years of experience. Review this design decision: Using microservices for a small team of 3 developers building an internal tool.",
+          "maxTokens": 512,
+          "expectedTokens": 200
+        },
+        {
+          "id": "sys-2",
+          "name": "格式化输出",
+          "prompt": "List the top 5 programming languages in 2024. Output in JSON format with fields: rank, name, description, primary_use_case.",
+          "maxTokens": 512,
+          "expectedTokens": 150
+        }
+      ]
+    }
+  },
+  "standard_benchmarks": {
+    "description": "行业标准基准测试配置",
+    "mmlu": {
+      "name": "MMLU (Massive Multitask Language Understanding)",
+      "url": "https://github.com/hendrycks/test",
+      "prompt": "Answer the following multiple choice question. Show your final answer as a single letter (A, B, C, or D). Question: ",
+      "maxTokens": 10,
+      "expectedTokens": 2
+    },
+    "humaneval": {
+      "name": "HumanEval (Code Generation)",
+      "url": "https://github.com/openai/human-eval",
+      "prompt": "Complete the following Python function:\n\ndef",
+      "maxTokens": 256,
+      "expectedTokens": 100
+    },
+    "mt_bench": {
+      "name": "MT-Bench (Multi-Turn Benchmark)",
+      "url": "https://github.com/lm-sys/FastChat",
+      "multi_turn": true,
+      "turns": [
+        {
+          "turn": 1,
+          "prompt": "Write a Python function to calculate the factorial of a number.",
+          "maxTokens": 256
+        },
+        {
+          "turn": 2,
+          "prompt": "Now modify it to use memoization.",
+          "maxTokens": 256
+        }
+      ]
+    }
+  },
+  "usage_guide": {
+    "description": "测试数据集使用指南",
+    "quick_test": {
+      "category": "short_response",
+      "description": "快速测试 - 验证API连接和基本功能",
+      "suggested_prompts": ["short-1", "short-2"]
+    },
+    "standard_benchmark": {
+      "category": "medium_response",
+      "description": "标准性能测试 - 评估一般性能指标",
+      "suggested_prompts": ["medium-1", "medium-2"]
+    },
+    "stress_test": {
+      "category": "long_response",
+      "description": "压力测试 - 评估长文本处理能力",
+      "suggested_prompts": ["long-1", "long-2"]
+    },
+    "code_evaluation": {
+      "category": "code_generation",
+      "description": "代码能力评估",
+      "suggested_prompts": ["code-1", "code-2", "code-3"]
+    }
+  }
+}

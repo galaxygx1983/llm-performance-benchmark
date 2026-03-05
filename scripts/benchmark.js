@@ -1,7 +1,7 @@
 /**
  * LLM Performance Benchmark Script
  * Supports OpenAI-compatible and Anthropic-compatible APIs
- * 
+ *
  * Metrics measured:
  * - First Token Latency (TTFT)
  * - Time to Last Token (TTLT)
@@ -15,37 +15,43 @@ import { readFile } from 'fs/promises';
 
 // Configuration
 const CONFIG_FILE = './llm-benchmark.config.json';
+const DATASET_FILE = './test-datasets.json';
 
 // Default configuration
 const defaultConfig = {
   // API Provider: 'openai' | 'anthropic' | 'openai-compatible'
   provider: 'openai-compatible',
-  
+
   // Base URL for API
   baseURL: '',
-  
+
   // API Key
   apiKey: '',
-  
+
   // Model to test
   model: '',
-  
+
   // Test parameters
   prompt: 'Write a short explanation of how distributed consensus works.',
   maxTokens: 512,
   temperature: 0.7,
-  
+
   // Number of runs for averaging
   runs: 3,
-  
+
   // Delay between runs (ms)
   delayBetweenRuns: 2000,
-  
+
   // Context window (for token estimation)
   contextWindow: 128000,
-  
+
   // Output limit (for token estimation)
-  outputLimit: 4096
+  outputLimit: 4096,
+
+  // Test dataset configuration
+  useDataset: false,
+  datasetCategory: 'medium_response',
+  datasetPromptIds: []
 };
 
 // Load or use default config
@@ -56,6 +62,48 @@ async function loadConfig() {
   } catch {
     return { ...defaultConfig };
   }
+}
+
+// Load test dataset
+async function loadDataset() {
+  try {
+    const content = await readFile(DATASET_FILE, 'utf-8');
+    return JSON.parse(content);
+  } catch {
+    return null;
+  }
+}
+
+// Display available dataset categories
+function displayDatasetCategories(dataset) {
+  if (!dataset || !dataset.categories) return;
+
+  console.log('\nAvailable Dataset Categories:');
+  console.log('-'.repeat(50));
+  for (const [key, cat] of Object.entries(dataset.categories)) {
+    console.log(`  ${key}: ${cat.description}`);
+    console.log(`    Prompts: ${cat.prompts.length}`);
+  }
+
+  if (dataset.standard_benchmarks) {
+    console.log('\nStandard Benchmarks:');
+    for (const [key, bench] of Object.entries(dataset.standard_benchmarks)) {
+      console.log(`  ${key}: ${bench.name}`);
+    }
+  }
+}
+
+// Get prompts from dataset
+function getDatasetPrompts(dataset, category, promptIds) {
+  if (!dataset || !dataset.categories) return null;
+
+  const cat = dataset.categories[category];
+  if (!cat) return null;
+
+  if (promptIds && promptIds.length > 0) {
+    return cat.prompts.filter(p => promptIds.includes(p.id));
+  }
+  return cat.prompts;
 }
 
 // Prompt for configuration
@@ -102,11 +150,11 @@ function estimateTokens(text) {
   const englishWords = text.match(/[a-zA-Z]+/g) || [];
   const chineseChars = text.match(/[\u4e00-\u9fff]/g) || [];
   const otherChars = text.length - englishWords.join('').length - chineseChars.join('').length;
-  
+
   const englishTokens = englishWords.length * 1.3;
   const chineseTokens = chineseChars.length * 1.5;
   const otherTokens = otherChars / 4;
-  
+
   return Math.round(englishTokens + chineseTokens + otherTokens);
 }
 
@@ -116,17 +164,17 @@ function parseDelta(parsed) {
   if (parsed.choices && parsed.choices[0]?.delta?.content) {
     return parsed.choices[0].delta.content;
   }
-  
+
   // Anthropic format: delta.text
   if (parsed.delta?.text) {
     return parsed.delta.text;
   }
-  
+
   // OpenAI non-streaming: choices[0].message.content
   if (parsed.choices && parsed.choices[0]?.message?.content) {
     return parsed.choices[0].message.content;
   }
-  
+
   return '';
 }
 
@@ -253,7 +301,7 @@ async function benchmarkStreaming(config) {
 // Run non-streaming benchmark for comparison
 async function benchmarkNonStreaming(config) {
   const startTime = Date.now();
-  
+
   const body = buildRequestBody(config);
   body.stream = false;
 
@@ -270,7 +318,7 @@ async function benchmarkNonStreaming(config) {
 
   const data = await response.json();
   const endTime = Date.now();
-  
+
   const content = parseDelta(data);
   const totalTokens = estimateTokens(content);
   const duration = (endTime - startTime) / 1000;
@@ -285,13 +333,19 @@ async function benchmarkNonStreaming(config) {
 }
 
 // Run single benchmark iteration
-async function runIteration(config, iteration) {
-  console.log(`\n--- Run ${iteration + 1}/${config.runs} ---`);
-  
+async function runIteration(config, iteration, promptInfo = null) {
+  const iterationLabel = promptInfo ? `${promptInfo.name} [${iteration + 1}/${config.runs}]` : `Run ${iteration + 1}/${config.runs}`;
+  console.log(`\n--- ${iterationLabel} ---`);
+
+  if (promptInfo) {
+    console.log(`Prompt: "${promptInfo.prompt.substring(0, 60)}..."`);
+    console.log(`Expected tokens: ~${promptInfo.expectedTokens}`);
+  }
+
   try {
     // Streaming benchmark
     const streamingResult = await benchmarkStreaming(config);
-    
+
     console.log(`✓ Streaming Test Complete`);
     if (streamingResult.firstTokenLatency) {
       console.log(`  First Token Latency (TTFT): ${streamingResult.firstTokenLatency.toFixed(3)}s`);
@@ -300,29 +354,33 @@ async function runIteration(config, iteration) {
     console.log(`  Output Tokens: ~${streamingResult.totalTokens}`);
     console.log(`  Throughput: ${streamingResult.throughput || 'N/A'} tokens/s`);
     console.log(`  Time per Token: ${streamingResult.timePerToken || 'N/A'} ms`);
-    
+
     // Delay before non-streaming test
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     // Non-streaming benchmark
     const nonStreamingResult = await benchmarkNonStreaming(config);
-    
+
     console.log(`\n✓ Non-Streaming Test Complete`);
     console.log(`  Total Latency: ${nonStreamingResult.totalLatency.toFixed(3)}s`);
     console.log(`  Output Tokens: ~${nonStreamingResult.totalTokens}`);
     console.log(`  Throughput: ${nonStreamingResult.throughput || 'N/A'} tokens/s`);
-    
-    return { streaming: streamingResult, nonStreaming: nonStreamingResult };
+
+    return {
+      streaming: streamingResult,
+      nonStreaming: nonStreamingResult,
+      promptInfo
+    };
   } catch (error) {
     console.error(`✗ Error: ${error.message}`);
-    return { error: error.message };
+    return { error: error.message, promptInfo };
   }
 }
 
 // Calculate statistics
 function calculateStats(results) {
   const validResults = results.filter(r => !r.error);
-  
+
   if (validResults.length === 0) {
     return null;
   }
@@ -330,14 +388,14 @@ function calculateStats(results) {
   const stats = {
     runs: validResults.length,
     streaming: {},
-    nonStreaming: {}
+    nonStreaming: {},
+    byPrompt: {}
   };
 
-  // Calculate streaming stats
+  // Calculate overall streaming stats
   const ttftValues = validResults.map(r => r.streaming.firstTokenLatency).filter(v => v !== null);
   const ttltValues = validResults.map(r => r.streaming.timeToLastToken).filter(v => v !== null);
   const throughputValues = validResults.map(r => r.streaming.throughput).filter(v => v !== null);
-  const tpsValues = validResults.map(r => parseFloat(r.streaming.tokensPerSecond)).filter(v => !isNaN(v));
 
   if (ttftValues.length > 0) {
     stats.streaming.firstTokenLatency = {
@@ -383,23 +441,67 @@ function calculateStats(results) {
     };
   }
 
+  // Calculate per-prompt stats if using dataset
+  const promptGroups = {};
+  validResults.forEach(r => {
+    if (r.promptInfo) {
+      const pid = r.promptInfo.id;
+      if (!promptGroups[pid]) {
+        promptGroups[pid] = {
+          name: r.promptInfo.name,
+          results: []
+        };
+      }
+      promptGroups[pid].results.push(r);
+    }
+  });
+
+  for (const [pid, group] of Object.entries(promptGroups)) {
+    const ttft = group.results.map(r => r.streaming.firstTokenLatency).filter(v => v !== null);
+    const ttlt = group.results.map(r => r.streaming.timeToLastToken).filter(v => v !== null);
+    const tput = group.results.map(r => r.streaming.throughput).filter(v => v !== null);
+
+    stats.byPrompt[pid] = {
+      name: group.name,
+      ttft: ttft.length > 0 ? {
+        min: Math.min(...ttft),
+        max: Math.max(...ttft),
+        avg: ttft.reduce((a, b) => a + b, 0) / ttft.length
+      } : null,
+      ttlt: ttlt.length > 0 ? {
+        min: Math.min(...ttlt),
+        max: Math.max(...ttlt),
+        avg: ttlt.reduce((a, b) => a + b, 0) / ttlt.length
+      } : null,
+      throughput: tput.length > 0 ? {
+        min: Math.min(...tput),
+        max: Math.max(...tput),
+        avg: Math.round(tput.reduce((a, b) => a + b, 0) / tput.length)
+      } : null
+    };
+  }
+
   return stats;
 }
 
 // Print summary
-function printSummary(config, stats) {
+function printSummary(config, stats, prompts = null) {
   console.log('\n' + '═'.repeat(70));
   console.log('  BENCHMARK SUMMARY');
   console.log('═'.repeat(70));
   console.log(`\nModel: ${config.model}`);
   console.log(`Provider: ${config.provider}`);
   console.log(`Base URL: ${config.baseURL}`);
-  console.log(`Prompt: "${config.prompt.substring(0, 50)}..."`);
+  if (config.useDataset) {
+    console.log(`Dataset Category: ${config.datasetCategory}`);
+  } else {
+    console.log(`Prompt: "${config.prompt.substring(0, 50)}..."`);
+  }
   console.log(`Max Tokens: ${config.maxTokens}`);
   console.log(`Temperature: ${config.temperature}`);
   console.log(`Runs: ${stats.runs}`);
 
-  console.log('\n--- Streaming Results ---');
+  console.log('\n--- Streaming Results (Overall) ---');
   if (stats.streaming.firstTokenLatency) {
     console.log(`First Token Latency (TTFT):`);
     console.log(`  Min: ${stats.streaming.firstTokenLatency.min.toFixed(3)}s`);
@@ -419,6 +521,20 @@ function printSummary(config, stats) {
     console.log(`  Min: ${stats.streaming.throughput.min}`);
     console.log(`  Max: ${stats.streaming.throughput.max}`);
     console.log(`  Avg: ${stats.streaming.throughput.avg}`);
+  }
+
+  // Print per-prompt breakdown if available
+  if (Object.keys(stats.byPrompt).length > 0) {
+    console.log('\n--- Results by Prompt ---');
+    for (const [pid, data] of Object.entries(stats.byPrompt)) {
+      console.log(`\n${data.name} (${pid}):`);
+      if (data.ttft) {
+        console.log(`  TTFT: min=${data.ttft.min.toFixed(3)}s, max=${data.ttft.max.toFixed(3)}s, avg=${data.ttft.avg.toFixed(3)}s`);
+      }
+      if (data.throughput) {
+        console.log(`  Throughput: min=${data.throughput.min}, max=${data.throughput.max}, avg=${data.throughput.avg} tokens/s`);
+      }
+    }
   }
 
   console.log('\n--- Non-Streaming Results ---');
@@ -450,11 +566,54 @@ async function main() {
   console.log('\n' + '█'.repeat(60));
   console.log('  LLM Performance Benchmark');
   console.log('  OpenAI & Anthropic Compatible');
+  console.log('  + Dataset Support');
   console.log('█'.repeat(60));
 
-  // Load or prompt for config
+  // Load configuration and dataset
   let config = await loadConfig();
-  
+  const dataset = await loadDataset();
+
+  // Show dataset categories if available
+  if (dataset) {
+    console.log('\n[Test Dataset Available]');
+    displayDatasetCategories(dataset);
+  }
+
+  // Check if user wants to use dataset
+  if (dataset && !config.useDataset) {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout
+    });
+
+    console.log('\nWould you like to use a test dataset? (y/n): ');
+    config.useDataset = await new Promise(resolve => {
+      rl.question('', answer => {
+        rl.close();
+        resolve(answer.toLowerCase().startsWith('y'));
+      });
+    });
+  }
+
+  // If using dataset, get prompts
+  let datasetPrompts = [];
+  if (config.useDataset && dataset) {
+    console.log(`\nUsing dataset category: ${config.datasetCategory}`);
+    datasetPrompts = getDatasetPrompts(dataset, config.datasetCategory, config.datasetPromptIds);
+
+    if (!datasetPrompts || datasetPrompts.length === 0) {
+      console.error(`No prompts found for category: ${config.datasetCategory}`);
+      console.log('Available categories:', Object.keys(dataset.categories).join(', '));
+      return;
+    }
+
+    console.log(`Found ${datasetPrompts.length} prompts to test`);
+    console.log('Prompts:');
+    datasetPrompts.forEach((p, i) => {
+      console.log(`  ${i + 1}. ${p.name} (${p.id}) - expected ~${p.expectedTokens} tokens`);
+    });
+  }
+
   // If no baseURL, prompt for configuration
   if (!config.baseURL || !config.apiKey || !config.model) {
     console.log('\n--- Configuration Required ---');
@@ -468,28 +627,55 @@ async function main() {
 
   const results = [];
 
-  for (let i = 0; i < config.runs; i++) {
-    const result = await runIteration(config, i);
-    results.push(result);
+  if (config.useDataset && datasetPrompts.length > 0) {
+    // Run benchmark for each prompt in dataset
+    for (const promptInfo of datasetPrompts) {
+      console.log(`\n${'='.repeat(60)}`);
+      console.log(`Testing: ${promptInfo.name}`);
+      console.log(`${'='.repeat(60)}`);
 
-    if (i < config.runs - 1) {
-      console.log(`\nWaiting ${config.delayBetweenRuns / 1000}s before next run...`);
-      await new Promise(resolve => setTimeout(resolve, config.delayBetweenRuns));
+      // Create config for this prompt
+      const promptConfig = {
+        ...config,
+        prompt: promptInfo.prompt,
+        maxTokens: promptInfo.maxTokens || config.maxTokens
+      };
+
+      for (let i = 0; i < config.runs; i++) {
+        const result = await runIteration(promptConfig, i, promptInfo);
+        results.push(result);
+
+        if (i < config.runs - 1) {
+          console.log(`\nWaiting ${config.delayBetweenRuns / 1000}s before next run...`);
+          await new Promise(resolve => setTimeout(resolve, config.delayBetweenRuns));
+        }
+      }
+    }
+  } else {
+    // Single prompt mode (original behavior)
+    for (let i = 0; i < config.runs; i++) {
+      const result = await runIteration(config, i);
+      results.push(result);
+
+      if (i < config.runs - 1) {
+        console.log(`\nWaiting ${config.delayBetweenRuns / 1000}s before next run...`);
+        await new Promise(resolve => setTimeout(resolve, config.delayBetweenRuns));
+      }
     }
   }
 
   // Calculate and print statistics
   const stats = calculateStats(results);
-  
+
   if (stats) {
-    printSummary(config, stats);
+    printSummary(config, stats, datasetPrompts);
   } else {
     console.error('\n✗ All runs failed. Check your configuration.');
   }
 }
 
 // Export for programmatic use
-export { benchmarkStreaming, benchmarkNonStreaming, estimateTokens };
+export { benchmarkStreaming, benchmarkNonStreaming, estimateTokens, loadDataset };
 
 // Run if executed directly
 main().catch(console.error);
