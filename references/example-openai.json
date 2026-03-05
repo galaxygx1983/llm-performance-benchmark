@@ -1,0 +1,13 @@
+{
+  "provider": "openai-compatible",
+  "baseURL": "https://api.openai.com/v1",
+  "apiKey": "your-api-key-here",
+  "model": "gpt-4",
+  "prompt": "Write a short explanation of how distributed consensus works.",
+  "maxTokens": 512,
+  "temperature": 0.7,
+  "runs": 3,
+  "delayBetweenRuns": 2000,
+  "contextWindow": 128000,
+  "outputLimit": 4096
+}

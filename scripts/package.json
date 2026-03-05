@@ -1,0 +1,14 @@
+{
+  "name": "llm-performance-benchmark",
+  "version": "1.0.0",
+  "description": "LLM Performance Benchmark Tool",
+  "type": "module",
+  "main": "benchmark.js",
+  "scripts": {
+    "start": "node benchmark.js",
+    "benchmark": "node benchmark.js"
+  },
+  "keywords": ["llm", "benchmark", "openai", "anthropic", "performance"],
+  "author": "",
+  "license": "MIT"
+}
