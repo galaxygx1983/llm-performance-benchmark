@@ -3,8 +3,15 @@ name: llm-performance-benchmark
 description: |
   LLM性能基准测试工具，支持OpenAI兼容和Anthropic兼容的API接口。
   用于测试大模型的吞吐量、首Token延迟(Time to First Token)、总延迟等关键性能指标。
-  适用于：评估不同模型的性能表现、对比多个API提供商、监控模型性能变化。
-  使用场景：测试API模型性能、基准测试、模型选型评估。
+  支持 Locust 并发压力测试，评估企业级并发承载能力。
+  适用于：评估不同模型的性能表现、对比多个API提供商、监控模型性能变化、企业并发压力测试。
+  使用场景：测试API模型性能、基准测试、模型选型评估、生产环境容量规划。
+triggers:
+  - LLM 性能测试
+  - 大模型并发压力测试
+  - 首 Token 延迟测试
+  - 企业大模型容量规划
+  - 本地大模型性能评估
 ---
 
 # LLM Performance Benchmark
@@ -185,5 +192,185 @@ npm install
 
 查看 `references/` 目录下的示例配置文件：
 - `example-openai.json` - OpenAI官方API
-- `example-anthropic.json` - Anthropic API  
+- `example-anthropic.json` - Anthropic API
 - `example-nvidia.json` - NVIDIA API
+- `locust.conf` - Locust 压力测试配置示例
+
+## 并发压力测试 (Locust)
+
+### 概述
+
+使用 Locust 进行企业级并发压力测试，评估 LLM 服务在高并发场景下的性能表现。
+
+### 安装依赖
+
+```bash
+pip install locust
+```
+
+### 快速开始
+
+#### 1. Web UI 模式 (推荐)
+
+```bash
+cd examples
+locust -f locustfile.py --host http://127.0.0.1:8000
+```
+
+浏览器打开 http://localhost:8089，配置：
+- 用户数 (Number of users)
+- 生成速率 (Spawn rate)
+- 点击 "Start swarming"
+
+#### 2. 无头模式 (自动化测试)
+
+```bash
+locust -f locustfile.py --host http://127.0.0.1:8000 \
+    --users 100 --spawn-rate 10 --run-time 5m --headless
+```
+
+#### 3. 分布式模式 (大规模压测)
+
+```bash
+# 主节点
+locust -f locustfile.py --master --master-bind-port=5557
+
+# 工作节点 (可在多台机器上运行)
+locust -f locustfile.py --worker --master-host=<主节点IP> --master-port=5557
+```
+
+### 测试脚本说明
+
+| 脚本 | 说明 |
+|------|------|
+| `locustfile.py` | 基础压力测试脚本 |
+| `locustfile_advanced.py` | 场景化压力测试 (客服/代码/文档等场景) |
+
+### 测试场景
+
+#### 基础测试 (`locustfile.py`)
+
+| 任务类型 | 权重 | 说明 |
+|----------|------|------|
+| chat_completion | 10 | 普通聊天补全 |
+| chat_completion_streaming | 5 | 流式聊天补全 |
+| short_prompt_test | 3 | 短提示词测试 |
+| long_prompt_test | 2 | 长提示词测试 |
+| code_generation_test | 1 | 代码生成测试 |
+
+#### 场景测试 (`locustfile_advanced.py`)
+
+| 场景 | 说明 |
+|------|------|
+| CustomerServiceUser | 客服问答场景 |
+| CodeAssistantUser | 代码助手场景 |
+| DocumentWriterUser | 文档写作场景 |
+| DataAnalystUser | 数据分析场景 |
+| EducationUser | 教育辅导场景 |
+| MixedWorkloadUser | 混合场景 (综合测试) |
+
+### 环境变量配置
+
+```bash
+# 设置模型和 Token 限制
+export LLM_MODEL="local-model"
+export LLM_API_KEY="your-api-key"
+export MAX_TOKENS_SHORT=100
+export MAX_TOKENS_MEDIUM=256
+export MAX_TOKENS_LONG=1024
+export LLM_STREAMING=false
+```
+
+### 企业级测试建议
+
+#### 1. 渐进式压测
+
+```bash
+# 阶段1: 低并发基线测试 (10用户)
+locust -f locustfile.py --host http://your-llm:8000 \
+    --users 10 --spawn-rate 5 --run-time 3m --headless
+
+# 阶段2: 中等并发 (50用户)
+locust -f locustfile.py --host http://your-llm:8000 \
+    --users 50 --spawn-rate 10 --run-time 5m --headless
+
+# 阶段3: 高并发压力测试 (100+用户)
+locust -f locustfile.py --host http://your-llm:8000 \
+    --users 100 --spawn-rate 20 --run-time 10m --headless
+```
+
+#### 2. 关键指标参考
+
+| 指标 | 良好 | 可接受 | 需优化 |
+|------|------|--------|--------|
+| TTFT (首Token延迟) | < 500ms | < 2s | > 2s |
+| P95 延迟 | < 3s | < 5s | > 5s |
+| 失败率 | < 0.1% | < 1% | > 1% |
+| RPS (每秒请求数) | 业务需求 | - | - |
+
+#### 3. 容量规划公式
+
+```
+所需并发数 = 目标用户数 × 活跃率 × 每用户QPS / 峰值系数
+
+示例:
+- 目标用户: 1000
+- 活跃率: 20%
+- 每用户QPS: 0.5
+- 峰值系数: 3
+
+所需并发 = 1000 × 0.2 × 0.5 / 3 = 33.3 ≈ 35 并发
+```
+
+### 测试报告
+
+测试完成后自动生成 HTML 报告:
+
+```
+reports/
+├── benchmark_20260310_143052.html    # HTML 报告
+├── benchmark_20260310_143052_stats.csv
+└── benchmark_20260310_143052_stats_history.csv
+```
+
+### 与 Prometheus/Grafana 集成
+
+```python
+# 在 locustfile.py 中添加
+from locust import events
+import prometheus_client
+
+@events.request.add_listener
+def on_request(request_type, name, response_time, response_length, exception, **kwargs):
+    # 导出 Prometheus 指标
+    prometheus_request_latency.observe(response_time / 1000)
+    prometheus_request_total.inc()
+```
+
+### 常见问题
+
+**Q: 如何测试流式响应?**
+A: 设置 `stream: true` 并关注 TTFT 指标:
+
+```python
+payload = {
+    "model": "your-model",
+    "messages": [...],
+    "stream": true  # 启用流式
+}
+```
+
+**Q: 如何模拟真实用户行为?**
+A: 使用 `wait_time` 设置请求间隔:
+
+```python
+class LLMUser(HttpUser):
+    wait_time = between(1, 5)  # 1-5秒随机间隔
+```
+
+**Q: 如何测试 Token 吞吐量?**
+A: 使用流式模式，统计每秒生成的 Token 数:
+
+```
+Token吞吐量 = 总生成Token数 / 总时间
+```
