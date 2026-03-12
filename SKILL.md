@@ -1,17 +1,17 @@
 ---
 name: llm-performance-benchmark
-description: |
-  LLM性能基准测试工具，支持OpenAI兼容和Anthropic兼容的API接口。
-  用于测试大模型的吞吐量、首Token延迟(Time to First Token)、总延迟等关键性能指标。
-  支持 Locust 并发压力测试，评估企业级并发承载能力。
-  适用于：评估不同模型的性能表现、对比多个API提供商、监控模型性能变化、企业并发压力测试。
-  使用场景：测试API模型性能、基准测试、模型选型评估、生产环境容量规划。
-triggers:
-  - LLM 性能测试
-  - 大模型并发压力测试
-  - 首 Token 延迟测试
-  - 企业大模型容量规划
-  - 本地大模型性能评估
+description: LLM大语言模型性能基准测试与压力测试工具。当用户需要测试大模型API性能(OpenAI/Anthropic兼容接口)、测量首Token延迟(TTFT/Time to First Token)、测量吞吐量(Throughput/Tokens Per Second)、测量总延迟(TTLT/Time to Last Token)、进行Locust并发压力测试、评估企业级并发承载能力、对比不同模型性能表现(gpt-4/claude-3/llama等)、对比多个API提供商、监控模型性能变化趋势、进行模型选型评估、生产环境容量规划、测试本地部署大模型性能、配置benchmark测试参数(baseURL/apiKey/model/maxTokens/temperature/runs)、分析流式/非流式响应性能、生成性能测试报告等相关任务时立即使用。支持llm-benchmark.config.json配置文件驱动，输出包含延迟统计、吞吐量、并发性能等完整指标。
+trigger:
+  - LLM性能测试
+  - 大模型基准测试
+  - 首Token延迟
+  - TTFT测试
+  - 吞吐量测试
+  - Tokens Per Second
+  - Locust压力测试
+  - 并发测试
+  - API性能对比
+  - 模型选型评估
 ---
 
 # LLM Performance Benchmark
