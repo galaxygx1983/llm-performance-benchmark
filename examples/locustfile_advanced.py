@@ -26,11 +26,29 @@ from locust.runners import MasterRunner
 CONFIG = {
     "model": os.getenv("LLM_MODEL", "local-model"),
     "api_key": os.getenv("LLM_API_KEY", ""),
+    "api_key_header": os.getenv("LLM_API_KEY_HEADER", "Authorization"),
     "max_tokens_short": int(os.getenv("MAX_TOKENS_SHORT", "100")),
     "max_tokens_medium": int(os.getenv("MAX_TOKENS_MEDIUM", "256")),
     "max_tokens_long": int(os.getenv("MAX_TOKENS_LONG", "1024")),
     "streaming": os.getenv("LLM_STREAMING", "false").lower() == "true",
 }
+
+
+def build_headers():
+    """构建请求 headers"""
+    headers = {"Content-Type": "application/json"}
+    if CONFIG["api_key"]:
+        if CONFIG["api_key_header"].lower() == "authorization":
+            headers["Authorization"] = f"Bearer {CONFIG['api_key']}"
+        elif CONFIG["api_key_header"].lower() == "x-api-key":
+            headers["x-api-key"] = CONFIG["api_key"]
+        else:
+            headers[CONFIG["api_key_header"]] = CONFIG["api_key"]
+    return headers
+
+
+# 共用 headers
+DEFAULT_HEADERS = build_headers()
 
 
 # ===========================================
@@ -104,7 +122,7 @@ class CustomerServiceUser(HttpUser):
         self.client.post(
             "/v1/chat/completions",
             data=json.dumps(payload),
-            headers={"Content-Type": "application/json"},
+            headers=DEFAULT_HEADERS,
             name="/customer-service"
         )
 
@@ -127,7 +145,7 @@ class CodeAssistantUser(HttpUser):
         self.client.post(
             "/v1/chat/completions",
             data=json.dumps(payload),
-            headers={"Content-Type": "application/json"},
+            headers=DEFAULT_HEADERS,
             name="/code-assistant"
         )
 
@@ -149,7 +167,7 @@ class DocumentWriterUser(HttpUser):
         self.client.post(
             "/v1/chat/completions",
             data=json.dumps(payload),
-            headers={"Content-Type": "application/json"},
+            headers=DEFAULT_HEADERS,
             name="/document-writing"
         )
 
@@ -171,7 +189,7 @@ class DataAnalystUser(HttpUser):
         self.client.post(
             "/v1/chat/completions",
             data=json.dumps(payload),
-            headers={"Content-Type": "application/json"},
+            headers=DEFAULT_HEADERS,
             name="/data-analysis"
         )
 
@@ -193,7 +211,7 @@ class EducationUser(HttpUser):
         self.client.post(
             "/v1/chat/completions",
             data=json.dumps(payload),
-            headers={"Content-Type": "application/json"},
+            headers=DEFAULT_HEADERS,
             name="/education"
         )
 
@@ -228,7 +246,7 @@ class MixedWorkloadUser(HttpUser):
         self.client.post(
             "/v1/chat/completions",
             data=json.dumps(payload),
-            headers={"Content-Type": "application/json"},
+            headers=DEFAULT_HEADERS,
             name="/mixed/customer-service"
         )
 
@@ -246,7 +264,7 @@ class MixedWorkloadUser(HttpUser):
         self.client.post(
             "/v1/chat/completions",
             data=json.dumps(payload),
-            headers={"Content-Type": "application/json"},
+            headers=DEFAULT_HEADERS,
             name="/mixed/code-assistant"
         )
 
@@ -263,7 +281,7 @@ class MixedWorkloadUser(HttpUser):
         self.client.post(
             "/v1/chat/completions",
             data=json.dumps(payload),
-            headers={"Content-Type": "application/json"},
+            headers=DEFAULT_HEADERS,
             name="/mixed/document-writing"
         )
 
@@ -280,7 +298,7 @@ class MixedWorkloadUser(HttpUser):
         self.client.post(
             "/v1/chat/completions",
             data=json.dumps(payload),
-            headers={"Content-Type": "application/json"},
+            headers=DEFAULT_HEADERS,
             name="/mixed/data-analysis"
         )
 
@@ -297,7 +315,7 @@ class MixedWorkloadUser(HttpUser):
         self.client.post(
             "/v1/chat/completions",
             data=json.dumps(payload),
-            headers={"Content-Type": "application/json"},
+            headers=DEFAULT_HEADERS,
             name="/mixed/education"
         )
 

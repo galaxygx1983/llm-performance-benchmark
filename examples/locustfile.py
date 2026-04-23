@@ -15,6 +15,7 @@ LLM 并发压力测试 - Locust 测试脚本
 """
 
 import json
+import os
 import random
 from locust import HttpUser, task, between, events
 from locust.runners import MasterRunner, WorkerRunner
@@ -104,6 +105,11 @@ LONG_CONTEXT_DATASET = [
 # LLM 压力测试用户类
 # ===========================================
 
+# 从环境变量获取 API Key
+API_KEY = os.getenv("LLM_API_KEY", "")
+API_KEY_HEADER = os.getenv("LLM_API_KEY_HEADER", "Authorization")  # 支持 Bearer 和其他 header 类型
+
+
 class LLMUser(HttpUser):
     """
     模拟并发用户访问 LLM API
@@ -119,9 +125,9 @@ class LLMUser(HttpUser):
     wait_time = between(1, 3)
 
     # 模型配置
-    model = "local-model"
-    max_tokens = 256
-    temperature = 0.7
+    model = os.getenv("LLM_MODEL", "local-model")
+    max_tokens = int(os.getenv("MAX_TOKENS", "256"))
+    temperature = float(os.getenv("TEMPERATURE", "0.7"))
 
     # API 端点
     chat_endpoint = "/v1/chat/completions"
@@ -130,6 +136,16 @@ class LLMUser(HttpUser):
     def on_start(self):
         """用户启动时执行"""
         self.test_prompts = TEST_PROMPTS.copy()
+        
+        # 构建 headers
+        self.headers = {"Content-Type": "application/json"}
+        if API_KEY:
+            if API_KEY_HEADER.lower() == "authorization":
+                self.headers["Authorization"] = f"Bearer {API_KEY}"
+            elif API_KEY_HEADER.lower() == "x-api-key":
+                self.headers["x-api-key"] = API_KEY
+            else:
+                self.headers[API_KEY_HEADER] = API_KEY
 
     @task(10)
     def chat_completion(self):
@@ -149,7 +165,7 @@ class LLMUser(HttpUser):
         self.client.post(
             self.chat_endpoint,
             data=json.dumps(payload),
-            headers={"Content-Type": "application/json"},
+            headers=self.headers,
             name="/chat/completions"
         )
 
@@ -171,7 +187,7 @@ class LLMUser(HttpUser):
         self.client.post(
             self.chat_endpoint,
             data=json.dumps(payload),
-            headers={"Content-Type": "application/json"},
+            headers=self.headers,
             name="/chat/completions/streaming"
         )
 
@@ -190,7 +206,7 @@ class LLMUser(HttpUser):
         self.client.post(
             self.chat_endpoint,
             data=json.dumps(payload),
-            headers={"Content-Type": "application/json"},
+            headers=self.headers,
             name="/chat/completions/short"
         )
 
@@ -209,7 +225,7 @@ class LLMUser(HttpUser):
         self.client.post(
             self.chat_endpoint,
             data=json.dumps(payload),
-            headers={"Content-Type": "application/json"},
+            headers=self.headers,
             name="/chat/completions/long"
         )
 
@@ -228,7 +244,7 @@ class LLMUser(HttpUser):
         self.client.post(
             self.chat_endpoint,
             data=json.dumps(payload),
-            headers={"Content-Type": "application/json"},
+            headers=self.headers,
             name="/chat/completions/code"
         )
 

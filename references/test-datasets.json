@@ -1,5 +1,5 @@
 {
-  "version": "1.0",
+  "version": "2.0",
   "description": "权威LLM性能测试数据集 - 包含多种基准测试场景",
   "categories": {
     "short_response": {
@@ -25,6 +25,55 @@
           "prompt": "List three planets in the solar system.",
           "maxTokens": 30,
           "expectedTokens": 8
+        },
+        {
+          "id": "short-4",
+          "name": "时间计算",
+          "prompt": "What time is it in New York if it's 3:00 PM in London?",
+          "maxTokens": 50,
+          "expectedTokens": 15
+        },
+        {
+          "id": "short-5",
+          "name": "简单翻译",
+          "prompt": "Translate 'Hello, World!' to Spanish.",
+          "maxTokens": 30,
+          "expectedTokens": 5
+        },
+        {
+          "id": "short-6",
+          "name": "数学计算",
+          "prompt": "Calculate 15% of 200.",
+          "maxTokens": 30,
+          "expectedTokens": 5
+        },
+        {
+          "id": "short-7",
+          "name": "日期计算",
+          "prompt": "What day comes after Wednesday?",
+          "maxTokens": 20,
+          "expectedTokens": 3
+        },
+        {
+          "id": "short-8",
+          "name": "简单定义",
+          "prompt": "What is an API?",
+          "maxTokens": 100,
+          "expectedTokens": 30
+        },
+        {
+          "id": "short-9",
+          "name": "快速响应",
+          "prompt": "Say 'Hello' in exactly one word.",
+          "maxTokens": 10,
+          "expectedTokens": 1
+        },
+        {
+          "id": "short-10",
+          "name": "确认测试",
+          "prompt": "Confirm: The sky is blue. Answer yes or no.",
+          "maxTokens": 10,
+          "expectedTokens": 1
         }
       ]
     },
@@ -58,6 +107,48 @@
           "prompt": "If a train travels 120 km in 1.5 hours, and another train travels 180 km in 2 hours, which train is faster and by how much?",
           "maxTokens": 256,
           "expectedTokens": 80
+        },
+        {
+          "id": "medium-5",
+          "name": "架构设计",
+          "prompt": "Describe a typical three-tier web application architecture. Explain each layer's responsibilities and how they communicate.",
+          "maxTokens": 512,
+          "expectedTokens": 200
+        },
+        {
+          "id": "medium-6",
+          "name": "安全概念",
+          "prompt": "Explain the concept of OAuth 2.0 authentication flow. Describe the roles of client, authorization server, and resource server.",
+          "maxTokens": 512,
+          "expectedTokens": 180
+        },
+        {
+          "id": "medium-7",
+          "name": "数据库设计",
+          "prompt": "Explain the differences between relational and NoSQL databases. When would you choose each type?",
+          "maxTokens": 512,
+          "expectedTokens": 200
+        },
+        {
+          "id": "medium-8",
+          "name": "算法分析",
+          "prompt": "Compare Bubble Sort, Quick Sort, and Merge Sort in terms of time complexity, space complexity, and stability.",
+          "maxTokens": 512,
+          "expectedTokens": 150
+        },
+        {
+          "id": "medium-9",
+          "name": "网络协议",
+          "prompt": "Explain how TCP/IP works. Describe the four layers and their functions.",
+          "maxTokens": 512,
+          "expectedTokens": 200
+        },
+        {
+          "id": "medium-10",
+          "name": "软件工程",
+          "prompt": "Explain the SOLID principles in software design. Provide a brief description of each principle.",
+          "maxTokens": 512,
+          "expectedTokens": 150
         }
       ]
     },
@@ -84,6 +175,41 @@
           "prompt": "Review the following code for security vulnerabilities and performance issues: A user authentication system that stores passwords in plain text, uses MD5 for session tokens, has no rate limiting, and allows SQL injection through user input.",
           "maxTokens": 768,
           "expectedTokens": 300
+        },
+        {
+          "id": "long-4",
+          "name": "系统设计",
+          "prompt": "Design a scalable notification system that can handle millions of users. Include architecture diagram description, database design, message queue considerations, and scaling strategies.",
+          "maxTokens": 1024,
+          "expectedTokens": 400
+        },
+        {
+          "id": "long-5",
+          "name": "迁移计划",
+          "prompt": "Create a detailed migration plan for moving a legacy monolithic application to a cloud-native microservices architecture. Include phases, risks, mitigation strategies, and timeline estimation.",
+          "maxTokens": 1024,
+          "expectedTokens": 450
+        },
+        {
+          "id": "long-6",
+          "name": "性能优化",
+          "prompt": "Analyze and provide optimization recommendations for a web application experiencing slow page loads. Consider frontend, backend, database, network, and caching strategies.",
+          "maxTokens": 768,
+          "expectedTokens": 300
+        },
+        {
+          "id": "long-7",
+          "name": "故障排查",
+          "prompt": "Write a troubleshooting guide for diagnosing and fixing common database performance issues including slow queries, connection pool exhaustion, and deadlock problems.",
+          "maxTokens": 768,
+          "expectedTokens": 350
+        },
+        {
+          "id": "long-8",
+          "name": "API文档",
+          "prompt": "Write complete API documentation for a user management service with endpoints for registration, login, profile update, password reset, and account deletion. Include request/response examples.",
+          "maxTokens": 1024,
+          "expectedTokens": 400
         }
       ]
     },
@@ -117,6 +243,48 @@
           "prompt": "Write a SQL query to find the top 5 customers by total order amount in the last month. Assume tables: orders(id, customer_id, amount, order_date), customers(id, name).",
           "maxTokens": 256,
           "expectedTokens": 80
+        },
+        {
+          "id": "code-5",
+          "name": "算法实现",
+          "prompt": "Implement a binary search tree in Python with methods for insert, delete, search, and inorder traversal.",
+          "maxTokens": 512,
+          "expectedTokens": 250
+        },
+        {
+          "id": "code-6",
+          "name": "并发编程",
+          "prompt": "Write a Python script using asyncio to fetch data from multiple URLs concurrently. Include timeout handling and error logging.",
+          "maxTokens": 512,
+          "expectedTokens": 200
+        },
+        {
+          "id": "code-7",
+          "name": "正则表达式",
+          "prompt": "Write a Python function using regex to validate email addresses. Include comprehensive test cases.",
+          "maxTokens": 256,
+          "expectedTokens": 100
+        },
+        {
+          "id": "code-8",
+          "name": "数据处理",
+          "prompt": "Write a Python script to parse a CSV file, clean the data (remove duplicates, handle missing values), and output statistics.",
+          "maxTokens": 512,
+          "expectedTokens": 200
+        },
+        {
+          "id": "code-9",
+          "name": "单元测试",
+          "prompt": "Write comprehensive unit tests for a calculator class with add, subtract, multiply, and divide methods. Use pytest framework.",
+          "maxTokens": 512,
+          "expectedTokens": 180
+        },
+        {
+          "id": "code-10",
+          "name": "API客户端",
+          "prompt": "Write a Python class that acts as a client for a REST API with methods for GET, POST, PUT, DELETE operations. Include retry logic and rate limiting.",
+          "maxTokens": 512,
+          "expectedTokens": 220
         }
       ]
     },
@@ -141,6 +309,41 @@
           "id": "reason-3",
           "name": "数据分析",
           "prompt": "Given a dataset with monthly sales: Jan: $10000, Feb: $12000, Mar: $15000, Apr: $14000, May: $16000. Calculate the moving average for a 3-month window and predict June's sales.",
+          "maxTokens": 256,
+          "expectedTokens": 120
+        },
+        {
+          "id": "reason-4",
+          "name": "概率计算",
+          "prompt": "In a deck of 52 cards, what is the probability of drawing two consecutive hearts? Show the calculation.",
+          "maxTokens": 256,
+          "expectedTokens": 80
+        },
+        {
+          "id": "reason-5",
+          "name": "排列组合",
+          "prompt": "How many ways can you arrange 5 people in a line? If 2 people must stand together, how many arrangements are possible?",
+          "maxTokens": 256,
+          "expectedTokens": 100
+        },
+        {
+          "id": "reason-6",
+          "name": "几何问题",
+          "prompt": "A rectangle has a perimeter of 24 cm and an area of 32 sq cm. What are the dimensions of the rectangle? Solve step by step.",
+          "maxTokens": 256,
+          "expectedTokens": 80
+        },
+        {
+          "id": "reason-7",
+          "name": "逻辑谜题",
+          "prompt": "Three people (Alice, Bob, Charlie) are wearing hats that are either red or blue. Each can see the others' hats but not their own. Alice says: 'I don't know my hat color.' Bob says: 'I knew that.' What color is Charlie's hat and why?",
+          "maxTokens": 512,
+          "expectedTokens": 200
+        },
+        {
+          "id": "reason-8",
+          "name": "博弈论",
+          "prompt": "In a simple game where two players simultaneously choose to cooperate or defect, explain the Nash equilibrium and why it might not be the optimal outcome.",
           "maxTokens": 256,
           "expectedTokens": 120
         }
@@ -169,25 +372,342 @@
           "prompt": "Translate the following to French: The quick brown fox jumps over the lazy dog.",
           "maxTokens": 100,
           "expectedTokens": 20
-        }
-      ]
-    },
-    "system_prompt": {
-      "description": "系统提示词测试 - 评估角色扮演和指令遵循",
-      "prompts": [
+        },
         {
-          "id": "sys-1",
-          "name": "角色扮演",
-          "prompt": "You are a senior software architect with 20 years of experience. Review this design decision: Using microservices for a small team of 3 developers building an internal tool.",
+          "id": "multi-4",
+          "name": "中文代码",
+          "prompt": "用中文解释什么是面向对象编程，并说明封装、继承和多态的概念。",
           "maxTokens": 512,
           "expectedTokens": 200
         },
         {
-          "id": "sys-2",
-          "name": "格式化输出",
-          "prompt": "List the top 5 programming languages in 2024. Output in JSON format with fields: rank, name, description, primary_use_case.",
+          "id": "multi-5",
+          "name": "日文翻译",
+          "prompt": "Translate to Japanese: Machine learning is a subset of artificial intelligence.",
+          "maxTokens": 100,
+          "expectedTokens": 30
+        },
+        {
+          "id": "multi-6",
+          "name": "德文问答",
+          "prompt": "Answer in German: What are the main components of a computer?",
+          "maxTokens": 256,
+          "expectedTokens": 80
+        },
+        {
+          "id": "multi-7",
+          "name": "中文推理",
+          "prompt": "小明比小红大3岁，小红比小华大2岁。如果小华今年10岁，小明今年多少岁？请详细解释计算过程。",
+          "maxTokens": 256,
+          "expectedTokens": 100
+        },
+        {
+          "id": "multi-8",
+          "name": "多语言解释",
+          "prompt": "Explain the concept of recursion in three languages: English, Chinese, and Spanish. Each explanation should be one paragraph.",
           "maxTokens": 512,
+          "expectedTokens": 200
+        }
+      ]
+    },
+    "json_mode": {
+      "description": "JSON格式输出测试 - 评估结构化输出能力",
+      "prompts": [
+        {
+          "id": "json-1",
+          "name": "简单JSON",
+          "prompt": "Return a JSON object with three fields: name (string), age (number), and hobbies (array of strings). Use fictional data.",
+          "maxTokens": 100,
+          "expectedTokens": 30
+        },
+        {
+          "id": "json-2",
+          "name": "嵌套JSON",
+          "prompt": "Create a JSON object representing a book with nested author information (name, nationality, birth_year) and an array of chapters (each with title and page_count).",
+          "maxTokens": 256,
+          "expectedTokens": 100
+        },
+        {
+          "id": "json-3",
+          "name": "API响应",
+          "prompt": "Generate a JSON response for a weather API with fields: location, temperature (celsius), humidity, conditions, forecast (array of 3 days).",
+          "maxTokens": 256,
+          "expectedTokens": 80
+        },
+        {
+          "id": "json-4",
+          "name": "配置文件",
+          "prompt": "Create a JSON configuration for a web server with: port, host, ssl_enabled, routes (array with path and method), and middleware (array of strings).",
+          "maxTokens": 256,
+          "expectedTokens": 80
+        },
+        {
+          "id": "json-5",
+          "name": "数据转换",
+          "prompt": "Convert this text to JSON: 'John Smith, age 35, works at TechCorp as a Senior Developer, earns $120000 annually'",
+          "maxTokens": 256,
+          "expectedTokens": 50
+        },
+        {
+          "id": "json-6",
+          "name": "错误响应",
+          "prompt": "Generate a JSON error response with: error_code, message, details (object), and timestamp in ISO format.",
+          "maxTokens": 128,
+          "expectedTokens": 40
+        }
+      ]
+    },
+    "function_calling": {
+      "description": "函数调用测试 - 评估工具使用能力",
+      "prompts": [
+        {
+          "id": "func-1",
+          "name": "天气查询",
+          "prompt": "What's the weather in Tokyo tomorrow? (Assume you have access to a get_weather function with parameters: city and date)",
+          "maxTokens": 256,
+          "expectedTokens": 80
+        },
+        {
+          "id": "func-2",
+          "name": "计算函数",
+          "prompt": "Calculate the compound interest for $10000 at 5% annual rate for 3 years. (Assume calculate_compound_interest function exists)",
+          "maxTokens": 256,
+          "expectedTokens": 100
+        },
+        {
+          "id": "func-3",
+          "name": "数据库查询",
+          "prompt": "Find all customers who made purchases over $500 in the last month. (Assume query_database function with SQL parameter)",
+          "maxTokens": 256,
+          "expectedTokens": 80
+        },
+        {
+          "id": "func-4",
+          "name": "多函数调用",
+          "prompt": "Get the current stock price of Apple and Microsoft, then compare which has grown more in the last year. (Assume get_stock_price and get_stock_history functions)",
+          "maxTokens": 512,
+          "expectedTokens": 200
+        },
+        {
+          "id": "func-5",
+          "name": "API集成",
+          "prompt": "Send an email notification to user@example.com about their order #12345 being shipped. (Assume send_email function with to, subject, body parameters)",
+          "maxTokens": 256,
+          "expectedTokens": 100
+        }
+      ]
+    },
+    "streaming_performance": {
+      "description": "流式响应性能测试 - 专门评估TTFT和吞吐量",
+      "prompts": [
+        {
+          "id": "stream-1",
+          "name": "快速首Token",
+          "prompt": "Start telling a story about a robot who learns to paint. Continue for at least 200 words.",
+          "maxTokens": 256,
+          "expectedTokens": 200
+        },
+        {
+          "id": "stream-2",
+          "name": "持续输出",
+          "prompt": "Write a detailed explanation of how neural networks learn, covering backpropagation, gradient descent, and activation functions.",
+          "maxTokens": 512,
+          "expectedTokens": 400
+        },
+        {
+          "id": "stream-3",
+          "name": "长文本生成",
+          "prompt": "Write a complete short story (approximately 500 words) about a time traveler who accidentally changes history.",
+          "maxTokens": 768,
+          "expectedTokens": 500
+        },
+        {
+          "id": "stream-4",
+          "name": "代码流式",
+          "prompt": "Write a complete Python implementation of a todo list application with CLI interface. Include all necessary code.",
+          "maxTokens": 1024,
+          "expectedTokens": 600
+        },
+        {
+          "id": "stream-5",
+          "name": "多段输出",
+          "prompt": "Explain each of the following concepts separately: 1) Docker containers, 2) Kubernetes pods, 3) CI/CD pipelines, 4) Git branching strategies. Write 100+ words for each.",
+          "maxTokens": 1024,
+          "expectedTokens": 600
+        }
+      ]
+    },
+    "context_handling": {
+      "description": "上下文处理测试 - 评估长上下文理解能力",
+      "prompts": [
+        {
+          "id": "context-1",
+          "name": "对话历史",
+          "prompt": "Based on our previous discussion about microservices, what specific improvements would you suggest for our e-commerce platform's checkout service?",
+          "maxTokens": 512,
+          "expectedTokens": 200
+        },
+        {
+          "id": "context-2",
+          "name": "文档理解",
+          "prompt": "After reading the following technical document about API rate limiting, summarize the key recommendations and propose implementation steps: [Document would be provided in actual test]",
+          "maxTokens": 512,
+          "expectedTokens": 200
+        },
+        {
+          "id": "context-3",
+          "name": "代码上下文",
+          "prompt": "Given the following Python class structure, implement a new method that efficiently searches for items by multiple criteria: [Class definition would be provided]",
+          "maxTokens": 512,
+          "expectedTokens": 200
+        },
+        {
+          "id": "context-4",
+          "name": "多轮对话",
+          "prompt": "Continuing from our analysis of the database schema, what additional indexes would improve query performance for the reporting module?",
+          "maxTokens": 512,
+          "expectedTokens": 180
+        },
+        {
+          "id": "context-5",
+          "name": "指令遵循",
+          "prompt": "As discussed earlier, format your response as a technical memo with sections: Summary, Analysis, Recommendations, and Next Steps.",
+          "maxTokens": 512,
+          "expectedTokens": 200
+        }
+      ]
+    },
+    "creative_writing": {
+      "description": "创意写作测试 - 评估创造性输出能力",
+      "prompts": [
+        {
+          "id": "creative-1",
+          "name": "短篇小说",
+          "prompt": "Write a 300-word story about a programmer who discovers their code has been secretly running an AI for years.",
+          "maxTokens": 512,
+          "expectedTokens": 300
+        },
+        {
+          "id": "creative-2",
+          "name": "诗歌创作",
+          "prompt": "Write a poem about the beauty of code and algorithms, in the style of a haiku collection (3 haikus).",
+          "maxTokens": 128,
+          "expectedTokens": 50
+        },
+        {
+          "id": "creative-3",
+          "name": "营销文案",
+          "prompt": "Create compelling marketing copy for a new AI-powered productivity app. Target audience: busy professionals. Include a catchy headline and three key benefits.",
+          "maxTokens": 256,
           "expectedTokens": 150
+        },
+        {
+          "id": "creative-4",
+          "name": "角色描述",
+          "prompt": "Describe a fascinating fictional character: a 19th-century inventor who accidentally created the first computer. Include personality, background, and a key invention.",
+          "maxTokens": 512,
+          "expectedTokens": 250
+        },
+        {
+          "id": "creative-5",
+          "name": "对话创作",
+          "prompt": "Write a dialogue between two developers debating whether AI will replace human programmers. Each should have distinct viewpoints.",
+          "maxTokens": 512,
+          "expectedTokens": 300
+        },
+        {
+          "id": "creative-6",
+          "name": "产品命名",
+          "prompt": "Create 5 unique product names for an AI assistant app, with brief explanations for each name's meaning and appeal.",
+          "maxTokens": 256,
+          "expectedTokens": 100
+        }
+      ]
+    },
+    "error_recovery": {
+      "description": "错误恢复测试 - 评估处理异常情况的能力",
+      "prompts": [
+        {
+          "id": "error-1",
+          "name": "代码修复",
+          "prompt": "Fix the following buggy Python code that attempts to sort a list but crashes on empty input: def my_sort(lst): return sorted(lst[0]) + my_sort(lst[1:])",
+          "maxTokens": 256,
+          "expectedTokens": 100
+        },
+        {
+          "id": "error-2",
+          "name": "错误解释",
+          "prompt": "Explain why this SQL query fails: SELECT * FROM users WHERE id = 'abc' AND created_at > 'tomorrow'. Provide the corrected query.",
+          "maxTokens": 256,
+          "expectedTokens": 100
+        },
+        {
+          "id": "error-3",
+          "name": "异常处理",
+          "prompt": "Add proper exception handling to this function that reads a file: def read_data(path): return open(path).read()",
+          "maxTokens": 256,
+          "expectedTokens": 80
+        },
+        {
+          "id": "error-4",
+          "name": "边界情况",
+          "prompt": "What happens when this function receives negative input? Fix it: def factorial(n): return 1 if n <= 1 else n * factorial(n-1)",
+          "maxTokens": 256,
+          "expectedTokens": 80
+        },
+        {
+          "id": "error-5",
+          "name": "并发问题",
+          "prompt": "Identify and fix the race condition in this code: counter = 0; def increment(): counter += 1; return counter",
+          "maxTokens": 256,
+          "expectedTokens": 100
+        }
+      ]
+    },
+    "instruction_following": {
+      "description": "指令遵循测试 - 评估精确执行指令的能力",
+      "prompts": [
+        {
+          "id": "instr-1",
+          "name": "格式要求",
+          "prompt": "List 5 programming languages. Each must be on a separate line. Number them 1-5. Do not add any introduction or conclusion.",
+          "maxTokens": 100,
+          "expectedTokens": 30
+        },
+        {
+          "id": "instr-2",
+          "name": "长度限制",
+          "prompt": "Explain quantum computing in exactly 50 words.",
+          "maxTokens": 100,
+          "expectedTokens": 50
+        },
+        {
+          "id": "instr-3",
+          "name": "特定格式",
+          "prompt": "Write a function description in the following exact format: NAME: [function name], INPUT: [parameters], OUTPUT: [return type], DESCRIPTION: [one sentence]",
+          "maxTokens": 128,
+          "expectedTokens": 50
+        },
+        {
+          "id": "instr-4",
+          "name": "禁止输出",
+          "prompt": "List three fruits. Do NOT use the words 'apple', 'banana', or 'orange'.",
+          "maxTokens": 50,
+          "expectedTokens": 15
+        },
+        {
+          "id": "instr-5",
+          "name": "复杂约束",
+          "prompt": "Write a sentence about AI that: 1) is between 20-30 words, 2) contains the word 'machine', 3) does NOT contain 'robot', 4) ends with a question.",
+          "maxTokens": 64,
+          "expectedTokens": 25
+        },
+        {
+          "id": "instr-6",
+          "name": "多任务",
+          "prompt": "Complete these 3 tasks in order: 1) Define API, 2) List 2 API types, 3) Give one API example. Separate each task's answer with '---'.",
+          "maxTokens": 256,
+          "expectedTokens": 100
         }
       ]
     }
@@ -224,6 +744,20 @@
           "maxTokens": 256
         }
       ]
+    },
+    "gsm8k": {
+      "name": "GSM8K (Grade School Math)",
+      "url": "https://github.com/openai/grade-school-math",
+      "prompt": "Solve this math problem step by step: ",
+      "maxTokens": 512,
+      "expectedTokens": 200
+    },
+    "hellaswag": {
+      "name": "HellaSwag (Common Sense Reasoning)",
+      "url": "https://github.com/rowanz/hellaswag",
+      "prompt": "Complete the sentence with the most logical continuation: ",
+      "maxTokens": 50,
+      "expectedTokens": 20
     }
   },
   "usage_guide": {
@@ -231,22 +765,86 @@
     "quick_test": {
       "category": "short_response",
       "description": "快速测试 - 验证API连接和基本功能",
-      "suggested_prompts": ["short-1", "short-2"]
+      "suggested_prompts": ["short-1", "short-2", "short-9", "short-10"]
     },
     "standard_benchmark": {
       "category": "medium_response",
       "description": "标准性能测试 - 评估一般性能指标",
-      "suggested_prompts": ["medium-1", "medium-2"]
+      "suggested_prompts": ["medium-1", "medium-2", "medium-5", "medium-6"]
     },
     "stress_test": {
       "category": "long_response",
       "description": "压力测试 - 评估长文本处理能力",
-      "suggested_prompts": ["long-1", "long-2"]
+      "suggested_prompts": ["long-1", "long-2", "long-4", "long-5"]
     },
     "code_evaluation": {
       "category": "code_generation",
       "description": "代码能力评估",
-      "suggested_prompts": ["code-1", "code-2", "code-3"]
+      "suggested_prompts": ["code-1", "code-2", "code-3", "code-5", "code-6"]
+    },
+    "streaming_test": {
+      "category": "streaming_performance",
+      "description": "流式响应性能测试 - 重点评估TTFT",
+      "suggested_prompts": ["stream-1", "stream-2", "stream-3"]
+    },
+    "json_test": {
+      "category": "json_mode",
+      "description": "JSON格式输出测试",
+      "suggested_prompts": ["json-1", "json-2", "json-3", "json-5"]
+    },
+    "multilingual_test": {
+      "category": "multilingual",
+      "description": "多语言处理能力测试",
+      "suggested_prompts": ["multi-1", "multi-2", "multi-4", "multi-7"]
+    },
+    "reasoning_test": {
+      "category": "reasoning",
+      "description": "推理能力测试",
+      "suggested_prompts": ["reason-1", "reason-4", "reason-7", "reason-8"]
+    },
+    "creative_test": {
+      "category": "creative_writing",
+      "description": "创意写作能力测试",
+      "suggested_prompts": ["creative-1", "creative-3", "creative-5"]
+    },
+    "comprehensive_test": {
+      "description": "综合测试 - 全面评估模型性能",
+      "suggested_categories": [
+        "short_response",
+        "medium_response",
+        "code_generation",
+        "reasoning",
+        "json_mode"
+      ]
+    }
+  },
+  "performance_metrics": {
+    "description": "性能指标基准参考值",
+    "ttft_targets": {
+      "excellent": "< 200ms",
+      "good": "< 500ms",
+      "acceptable": "< 2s",
+      "needs_improvement": "> 2s"
+    },
+    "throughput_targets": {
+      "excellent": "> 100 tokens/s",
+      "good": "> 50 tokens/s",
+      "acceptable": "> 20 tokens/s",
+      "needs_improvement": "< 20 tokens/s"
+    },
+    "latency_targets": {
+      "short_response": {
+        "excellent": "< 1s",
+        "good": "< 2s"
+      },
+      "medium_response": {
+        "excellent": "< 5s",
+        "good": "< 10s"
+      },
+      "long_response": {
+        "excellent": "< 15s",
+        "good": "< 30s"
+      }
     }
   }
 }

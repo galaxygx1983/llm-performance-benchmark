@@ -15,7 +15,7 @@ import { readFile } from 'fs/promises';
 
 // Configuration
 const CONFIG_FILE = './llm-benchmark.config.json';
-const DATASET_FILE = './test-datasets.json';
+const DATASET_FILE = '../references/test-datasets.json';
 
 // Default configuration
 const defaultConfig = {
